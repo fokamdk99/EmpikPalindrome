@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -f springboot-first-app/pom.xml clean compile'
+                sh 'mvn -f springboot-first-app/pom.xml clean package'
             }
         }
         stage('Test')
