@@ -27,4 +27,4 @@ echo ${NAME}
 echo ${VERSION}
 echo 'KONIEC SPRAWDZENIA'
 set -x
-java -jar target/${NAME}-${VERSION}.jar
+java -jar target/${NAME}-${VERSION}-SNAPSHOT.jar
