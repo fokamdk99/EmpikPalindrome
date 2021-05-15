@@ -1,7 +1,8 @@
-FROM adoptopenjdk:11-jre-hotspot
-VOLUME /tmp
-WORKDIR /src
-RUN mvnw clean package
-ADD springboot-first-app/target/springboot-first-app-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM openjdk:16-alpine3.13
+WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY src ./src
 EXPOSE 2223
+CMD ["./mvnw", "spring-boot:run"]
