@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t fokamdk99/springboot-first-app springboot-first-app/Dockerfile'
+                sh 'docker build -t fokamdk99/springboot-first-app springboot-first-app/'
             }
         }
         stage('Deliver') { 
