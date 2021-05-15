@@ -11,4 +11,4 @@ FROM openjdk:11.0.11-9-jre-slim-buster
 WORKDIR /app
 
 COPY --from=MAVEN_BUILD /build/target/springboot-first-app-0.1.0-SNAPSHOT.jar /app/
-ENTRYPOINT ["java", "-jar", "springboot-first-app-0.1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "springboot-first-app-0.0.1-SNAPSHOT.jar"]
