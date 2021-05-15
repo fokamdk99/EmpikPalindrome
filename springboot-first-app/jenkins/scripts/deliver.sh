@@ -27,4 +27,4 @@ echo ${NAME}
 echo ${VERSION}
 echo 'KONIEC SPRAWDZENIA'
 set -x
-java -jar springboot-first-app/target/${NAME}-${VERSION}-SNAPSHOT.jar
+java -jar springboot-first-app/target/springboot-first-app-0.0.1-SNAPSHOT.jar
