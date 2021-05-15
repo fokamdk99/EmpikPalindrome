@@ -1,33 +1,17 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.1-adoptopenjdk-11'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
+    agent any
     options {
         skipStagesAfterUnstable()
     }
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -f springboot-first-app/pom.xml -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn -f springboot-first-app/pom.xml test'
-            }
-            post {
-                always {
-                    junit 'springboot-first-app/target/surefire-reports/*.xml'
-                }
+                sh 'docker build -t fokamdk99/springboot-first-app .'
             }
         }
         stage('Deliver') { 
             steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh 'springboot-first-app/jenkins/scripts/deliver.sh' 
+                sh 'docker run -p 2223:2223 fokamdk99/springboot-first-app'
             }
         }
     }
