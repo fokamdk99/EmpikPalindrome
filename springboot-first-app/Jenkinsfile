@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn -f springboot-first-app/pom.xml test'
+                sh 'mvn test'
             }
             post {
                 always {
