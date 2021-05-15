@@ -16,17 +16,17 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn -f springboot-first-app/pom.xml test'
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'springboot-first-app/target/surefire-reports/*.xml'
                 }
             }
         }
         stage('Deliver') { 
             steps {
-                sh './jenkins/scripts/deliver.sh' 
+                sh 'springboot-first-app/jenkins/scripts/deliver.sh' 
             }
         }
     }
