@@ -1,17 +1,28 @@
 pipeline {
     agent any
+
+    tools {
+        maven "maven-3.8.1"
+    }
     options {
         skipStagesAfterUnstable()
     }
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -f springboot-first-app/Dockerfile -t fokamdk99/springboot-first-app springboot-first-app/'
+                sh 'mvn -f springboot-first-app/pom.xml clean compile'
+            }
+        }
+        stage('Test')
+        {
+            steps{
+                sh 'mvn -f springboot-first-app/pom.xml test'
             }
         }
         stage('Deliver') { 
             steps {
-                sh 'docker run -p 2223:2223 fokamdk99/springboot-first-app'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh 'springboot-first-app/jenkins/scripts/deliver.sh'
             }
         }
     }

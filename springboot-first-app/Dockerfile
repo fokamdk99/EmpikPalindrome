@@ -4,4 +4,5 @@ COPY mvnw pom.xml ./
 COPY .mvn/ .mvn
 COPY src ./src
 EXPOSE 2223
+
 CMD ["./mvnw", "spring-boot:run"]
