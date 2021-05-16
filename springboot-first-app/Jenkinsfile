@@ -13,6 +13,7 @@ pipeline {
                 sh 'docker build -t springboot-first-app-dockerized1 springboot-first-app/'
             }
         }
+        
         stage('Push') { 
             steps {
                 sh 'docker image tag springboot-first-app-dockerized1:latest fokamdk99/springboot-first-app-dockerized1'
