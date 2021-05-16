@@ -10,19 +10,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -f springboot-first-app/pom.xml clean package'
-            }
-        }
-        stage('Test')
-        {
-            steps{
-                sh 'mvn -f springboot-first-app/pom.xml test'
+                sh 'docker build -t springboot-first-app-dockerized1 .'
             }
         }
         stage('Deliver') { 
             steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh 'springboot-first-app/jenkins/scripts/deliver.sh'
+                sh 'docker run -p 2223:2223 springboot-first-app-dockerized1'
             }
         }
     }
