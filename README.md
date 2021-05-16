@@ -64,26 +64,16 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+
         stage('Build') {
             steps {
                 sh 'mvn -f springboot-first-app/pom.xml clean package'
             }
         }
-        stage('Test')
-        {
-            steps{
-                sh 'mvn -f springboot-first-app/pom.xml test'
-            }
-        }
-        stage('Deliver') { 
-            steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh 'springboot-first-app/jenkins/scripts/deliver.sh'
-            }
-        }
     }
 }
 ```
+
 This Jenkinsfile builds, runs tests and finally launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
 
 # Stage 5
