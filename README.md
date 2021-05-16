@@ -99,8 +99,7 @@ ENTRYPOINT ["java", "-jar", "springboot-first-app-0.0.1-SNAPSHOT.jar"]
 
 It is possible to access Jenkins container: ``` docker exec -it jenkins-empik bash  ```. Then you may navigate to the folder where files relevant to particular projects are stored: ``` cd var/jenkins_home/workspace ```. Then ``` cd EmpikPalindrome/springboot-first-app ``` to your pipeline project and run the following commands:
 ```
-docker image build -t springboot-first-app-docker .
-docker container run -p 2223:2223 springboot-first-app-docker
+docker container run -p 2223:2223 springboot-first-app-dockerized1
 curl -XGET 'http://localhost:2223/welcome?word=AnnA'
 ```
 
