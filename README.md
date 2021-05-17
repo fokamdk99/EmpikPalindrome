@@ -2,18 +2,19 @@
 Simple spring boot app that determines whether a given string is a palindrome.
 
 # Windows
+Follow these instructions if you work on windows.
 
 ## Stage 2
 Download Jenkins and run as a docker image on your local machine. Write step by step how to do it.
 It is assumed that Docker is already installed on a development machine and Docker CLI is available. As a first step, create a bridge network:
 ``` docker network create jenkins ```
 
-It will be necessary to run Docker commands inside Jenkins container, so it is required to download and run Docker daemon:
+ It is required to download and run Docker daemon in order to run Docker commands inside Jenkins container:
 ```
 docker run --name jenkins-empik --rm --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume "%HOMEDRIVE%%HOMEPATH%":/home --publish 8080:8080 --publish 50000:50000 myjenkins-empik:1.1
 ```
 
-In the next step a customised version of Jenkins Docker image will be run. To do so, create Dockerfile with the following content:
+In the next step run a customised version of Jenkins Docker image. To do so, create Dockerfile with the following content:
 ```
 FROM jenkins/jenkins:2.277.4-lts-jdk11
 USER root
@@ -40,13 +41,17 @@ Finally, run the image with the following ``` docker run ``` command:
 docker run --name jenkins-empik --rm --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume "%HOMEDRIVE%%HOMEPATH%":/home --publish 8080:8080 --publish 50000:50000 myjenkins-empik:1.1
 ```
 
-Before accessing Jenkins, there a few steps that are necessary in order to proceed further. Open a browser and paste the following url: ``` http://localhost:8080 ```. "Unlock Jenkins" page should appear. Display the Jenkins console log: ``` docker logs jenkins-empik ```, copy the automatically generated password (between the two sets of asterisks) and paste it. After clicking "continue" button, "Customize Jenkins" page should appear. Select option "install suggested plugins". In the last step, create first admin user and click "save and finish". 
+Before accessing Jenkins, there a few steps that are necessary in order to proceed further:
+* Open a browser and paste the following url: ``` http://localhost:8080 ```. "Unlock Jenkins" page should appear. 
+* Display the Jenkins console log: ``` docker logs jenkins-empik ```, copy the automatically generated password (between the two sets of asterisks) and paste it. After clicking "continue" button, "Customize Jenkins" page should appear. 
+* Select option "install suggested plugins". After plugins have been installed, click "save and continue".
+* create first admin user and click "save and finish". 
+* To be able to manage your java application, add a Maven installation in Jenkins. To do so, navigate to dashboard and select "manage jenkins" and then "global tool configuration". Scroll down to "Maven installations", click "Add Maven", provide name "maven-3.8.1" and choose version ``` 3.8.1 ```. Remember to save new settings.
 
-To be able to manage your java application, add a Maven installation in Jenkins. To do so, navigate to dashboard and select "manage jenkins" and then "global tool configuration". Scroll down to "Maven installations", click "Add Maven", provide name "maven-3.8.1" and choose version ``` 3.8.1 ```. Remember to save new settings.
+___
 
-## Stage 3 and 4
-Connect Jenkins to github repository. Create a Jenkins Pipeline that builds your spring boot application when 
-changes are pushed to Github.
+## Stage 3
+Connect Jenkins to github repository. 
 
 It is assumed that a github repository is already created. Navigate to Jenkins dashboard and select "New Item" from the left side. Choose "pipeline" project, provide a valid name for the newly created project and click "ok". In "general" tab provide a brief description. Underneath, select "GitHub project" option and paste a url of the github repository. In "build triggers" section select "GitHub hook trigger for GITScm polling". Then, in "pipeline" tab select definition as "Pipeline script from SCM", SCM as "Git" and paste repository URL. In "branch specifier" field type ``` */main ```. Additionally, change "script path" from ``` Jenkins ``` to ``` springboot-first-app/Jenkinsfile ```.
 
@@ -76,7 +81,11 @@ pipeline {
 
 This Jenkinsfile builds, runs tests and finally launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
 
-# Stage 5
+## Stage 4
+Create a Jenkins Pipeline that builds your spring boot application when 
+changes are pushed to Github.
+
+## Stage 5
 Wrap your application in a Docker image, building it in Jenkins. Check that your container is running.
 
 To wrap you application in a Docker image, create the following Dockerfile:
