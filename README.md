@@ -10,7 +10,8 @@ It is assumed that Docker is already installed on a development machine and Dock
 ``` docker network create jenkins ```
 
  It is required to download and run Docker daemon in order to run Docker commands inside Jenkins container:
-```docker run name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 3000:3000 --publish 2376:2376 docker:dind storage-driver overlay2
+```
+docker run name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 3000:3000 --publish 2376:2376 docker:dind storage-driver overlay2
 ```
 
 In the next step run a customised version of Jenkins Docker image. To do so, create Dockerfile with the following content:
