@@ -69,16 +69,17 @@ The github repository has been configured. It will now notify a specified Jenkin
 
 ___
 
-This Jenkinsfile builds, runs tests and finally launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
-
 ## Stage 4
-Create a Jenkins Pipeline that builds your spring boot application when 
+In this step you will create a Jenkins Pipeline that builds your spring boot application when 
 changes are pushed to Github.
 
-Navigate to Jenkins dashboard and select "New Item" from the left side. Choose "pipeline" project, provide a valid name for the newly created project and click "ok". In "general" tab provide a brief description. Underneath, select "GitHub project" option and paste a url of the github repository. In "build triggers" section select "GitHub hook trigger for GITScm polling". Then, in "pipeline" tab select definition as "Pipeline script from SCM", SCM as "Git" and paste repository URL. In "branch specifier" field type ``` */main ```. Additionally, change "script path" from ``` Jenkins ``` to ``` springboot-first-app/Jenkinsfile ```.
+* Navigate to Jenkins dashboard and select "New Item" from the left side. Choose "pipeline" project, provide a valid name for the newly created project and click "ok". 
+* In "general" tab provide a brief description. Underneath, select "GitHub project" option and paste a url of the github repository. 
+* In "build triggers" section select "GitHub hook trigger for GITScm polling". 
+* In "pipeline" tab select definition as "Pipeline script from SCM", SCM as "Git" and paste repository URL. In "branch specifier" field type ``` */main ```. Additionally, change "script path" from ``` Jenkins ``` to ``` springboot-first-app/Jenkinsfile ```.
 Jenkins pipeline project has now been configured.
 
-Now you can proceed and create the following Jenkinsfile:
+You may have noticed that github repository contains the following Jenkinsfile:
 ```
 pipeline {
     agent any
@@ -90,15 +91,30 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-
         stage('Build') {
             steps {
                 sh 'mvn -f springboot-first-app/pom.xml clean package'
             }
         }
+        stage('Test')
+        {
+            steps{
+                sh 'mvn -f springboot-first-app/pom.xml test'
+            }
+        }
+        stage('Deliver') { 
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh 'springboot-first-app/jenkins/scripts/deliver.sh'
+            }
+        }
     }
 }
 ```
+
+This Jenkinsfile builds, runs tests and launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
+
+___
 
 ## Stage 5
 Wrap your application in a Docker image, building it in Jenkins. Check that your container is running.
@@ -120,8 +136,11 @@ WORKDIR /app
 COPY --from=MAVEN_BUILD1 /build/target/springboot-first-app-0.0.1-SNAPSHOT.jar /app/
 ENTRYPOINT ["java", "-jar", "springboot-first-app-0.0.1-SNAPSHOT.jar"]
 ```
+The Dockerfile will build your springboot application and provide an entrypoint in case this image will be run. 
 
-It is possible to access Jenkins container: ``` docker exec -it jenkins-empik bash  ```. Then you may navigate to the folder where files relevant to particular projects are stored: ``` cd var/jenkins_home/workspace ```. Then ``` cd EmpikPalindrome/springboot-first-app ``` to your pipeline project and run the following commands:
+To check that it works:
+* access your Jenkins container from the command line: ``` docker exec -it jenkins-empik bash  ```. 
+* Navigate to the folder where files relevant to particular projects are stored: ``` cd var/jenkins_home/workspace ```. Then ``` cd <pipeline_project_name>/springboot-first-app ``` to your pipeline project and run the following commands:
 ```
 docker container run -p 2223:2223 springboot-first-app-dockerized1
 curl -XGET 'http://docker:2223/welcome?word=AnnA'
@@ -129,6 +148,7 @@ curl -XGET 'http://docker:2223/welcome?word=AnnA'
 
 Text "Anna is a palindrome" should be returned.
 
+___
 
 ## Stage 6
 In this stage you will build and push a Docker image to a remote Docker Hub repository. First, login to your Docker Hub account. To do so, access your Jenkins instance command line:
@@ -161,3 +181,5 @@ pipeline {
 ```
 
 Jenkinsfile has been divided into two separate steps. First step builds the image of your application, while the other pushes the result to a remote Docker Hub repository.
+
+___
