@@ -55,14 +55,36 @@ Connect Jenkins to github repository.
 
 * Create new github repository using your account (it is possible to create an account for free). Copy the link to your repository (go to "code" and then copy HTTPS link).
 * In command line type: ``` git clone <github_link> ``` and replace <github_link> with the url copied in the previous step
-* Download zipped version of this repository (click "code" and then "download ZIP"). Unzip folder and then move contents to the folder of your repository. Folder structure should look like this: ``` PODAJ JAKAS PRZYKLADOWA STRUKTURE ```
+* Download zipped version of this repository (click "code" and then "download ZIP"). Unzip folder and then move contents to the folder of your repository. Folder structure should look like this: 
+ 
+``` .
+└── przykladowy_empik
+    └── springboot-first-app
+        ├── jenkins
+        │   └── scripts
+        └── src
+            ├── bin
+            │   └── com
+            │       └── springboot1
+            │           └── springbootfirstapp
+            ├── main
+            │   ├── java
+            │   │   └── com
+            │   │       └── springboot1
+            │   │           └── springbootfirstapp
+            │   └── resources
+            └── test
+                └── java
+                    └── com
+                        └── springboot1
+                            └── springbootfirstapp ```
 * Open "settings" tab, choose "webhooks" option and click "Add webhook". It is required to provide an ip address and port that Jenkins instance operates on. For development purposes you will use the instance running locally on your machine. In order for Github to "see" that instance, follow these instructions:
     * Open link: ``` https://ngrok.com/download ``` and download ngrok version for windows.
     * unzip the folder and navigate to it
     * create a free account. After registration, copy an automatically generated link with authorisation token. It should look like this: ``` ./ngrok authtoken <your_auth_token> ```
     * In the command line run the copied instruction.
-    * Lastly, run ``` ./ngrok http 8080 ```. and copy generated url. It should look like this: ``` PODAJ JAKIS URL PRZYKLADOWY ```
-* Now paste the generated url under "Payload URL" field.
+    * Lastly, run ``` ./ngrok http 8080 ```. and copy generated url. It should look like this: ``` http://0cfa33da811f.ngrok.io ```
+* Now paste the generated url under "Payload URL" field so it looks like this: ``` http://0cfa33da811f.ngrok.io/github-webhook/ ```.
 * Select content type as "application/json", then click "let me select individual events" and ensure that push and pull request events are enabled. Finally click "Add webhook".
 
 The github repository has been configured. It will now notify a specified Jenkins project each time a new commit is pushed.
