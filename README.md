@@ -53,10 +53,31 @@ ___
 ## Stage 3
 Connect Jenkins to github repository. 
 
-It is assumed that a github repository is already created. Navigate to Jenkins dashboard and select "New Item" from the left side. Choose "pipeline" project, provide a valid name for the newly created project and click "ok". In "general" tab provide a brief description. Underneath, select "GitHub project" option and paste a url of the github repository. In "build triggers" section select "GitHub hook trigger for GITScm polling". Then, in "pipeline" tab select definition as "Pipeline script from SCM", SCM as "Git" and paste repository URL. In "branch specifier" field type ``` */main ```. Additionally, change "script path" from ``` Jenkins ``` to ``` springboot-first-app/Jenkinsfile ```.
+* Create new github repository using your account (it is possible to create an account for free). Copy the link to your repository (go to "code" and then copy HTTPS link).
+* In command line type: ``` git clone <github_link> ``` and replace <github_link> with the url copied in the previous step
+* Download zipped version of this repository (click "code" and then "download ZIP"). Unzip folder and then move contents to the folder of your repository. Folder structure should look like this: ``` PODAJ JAKAS PRZYKLADOWA STRUKTURE ```
+* Open "settings" tab, choose "webhooks" option and click "Add webhook". It is required to provide an ip address and port that Jenkins instance operates on. For development purposes you will use the instance running locally on your machine. In order for Github to "see" that instance, follow these instructions:
+* Open link: ``` https://ngrok.com/download ``` and download ngrok version for windows.
+* unzip the folder and navigate to it
+* create a free account. After registration, copy an automatically generated link with authorisation token. It should look like this: ``` ./ngrok authtoken <your_auth_token> ```
+* In the command line run the copied instruction.
+* Lastly, run ``` ./ngrok http 8080 ```. and copy generated url. It should look like this: ``` PODAJ JAKIS URL PRZYKLADOWY ```
+* Now paste the generated url under "Payload URL" field.
+* Select content type as "application/json", then click "let me select individual events" and ensure that push and pull request events are enabled. Finally click "Add webhook".
 
-Jenkins pipeline project has now been configured. Now, the github repository needs to be configured, so that it notifies Jenkins project each time a new commit is pushed. Go to github page and select a repository that will be connected. Open "settings" tab, choose "webhooks" option and click "Add webhook". Provide ip address and port that your Jenkins instance operates on, e.g ''' http://192.168.0.20:8080/github-webhook/ '''. Select content type as "application/json", then click "let me select individual events" and ensure that push and pull request events are enabled. Finally click "Add webhook".
-Now Jenkins project is connected to a given github repository. After a pushed commit, Jenkins will automatically run commands specified in Jenkinsfile.
+The github repository has been configured. It will now notify a specified Jenkins project each time a new commit is pushed.
+
+___
+
+This Jenkinsfile builds, runs tests and finally launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
+
+## Stage 4
+Create a Jenkins Pipeline that builds your spring boot application when 
+changes are pushed to Github.
+
+Navigate to Jenkins dashboard and select "New Item" from the left side. Choose "pipeline" project, provide a valid name for the newly created project and click "ok". In "general" tab provide a brief description. Underneath, select "GitHub project" option and paste a url of the github repository. In "build triggers" section select "GitHub hook trigger for GITScm polling". Then, in "pipeline" tab select definition as "Pipeline script from SCM", SCM as "Git" and paste repository URL. In "branch specifier" field type ``` */main ```. Additionally, change "script path" from ``` Jenkins ``` to ``` springboot-first-app/Jenkinsfile ```.
+Jenkins pipeline project has now been configured.
+
 Now you can proceed and create the following Jenkinsfile:
 ```
 pipeline {
@@ -78,12 +99,6 @@ pipeline {
     }
 }
 ```
-
-This Jenkinsfile builds, runs tests and finally launches your Springboot application. Check that application is running: go to the browser and paste the following link: ``` http://localhost:2223/welcome?word=AnnA ```. A page with text "AnnA is a palindrome." should appear.
-
-## Stage 4
-Create a Jenkins Pipeline that builds your spring boot application when 
-changes are pushed to Github.
 
 ## Stage 5
 Wrap your application in a Docker image, building it in Jenkins. Check that your container is running.
