@@ -172,8 +172,8 @@ pipeline {
         }
         stage('Push') { 
             steps {
-                sh 'docker image tag springboot-first-app-dockerized1:latest fokamdk99/springboot-first-app-dockerized1'
-                sh 'docker push fokamdk99/springboot-first-app-dockerized1'
+                sh 'docker image tag springboot-first-app-dockerized1:latest <your_account_name>/springboot-first-app-dockerized1'
+                sh 'docker push <your_account_name>/springboot-first-app-dockerized1'
             }
         }
     }
